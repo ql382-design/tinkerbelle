@@ -3,8 +3,7 @@ from flask_socketio import SocketIO, send, emit
 import socket
 import sys
 
-# mac update uses port 5000 for airplay
-port= int(sys.argv[1]) or 5000
+port= 5001
 
 app = Flask(__name__)
 socketio = SocketIO(app)

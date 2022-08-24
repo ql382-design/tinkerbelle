@@ -9,12 +9,12 @@ let pickr;
 const socket = io();
 
 socket.on('connect', () => {
-  socket.on('hex', (val) => {document.body.style.backgroundColor = val})
-  socket.on('audio', (val) => {getSound(encodeURI(val));})
-  socket.on('pauseAudio', (val) => {audio.pause();})
+  socket.on('hex', (val) => { document.body.style.backgroundColor = val })
+  socket.on('audio', (val) => { getSound(encodeURI(val)); })
+  socket.on('pauseAudio', (val) => { audio.pause(); })
   socket.onAny((event, ...args) => {
-  console.log(event, args);
-});
+    console.log(event, args);
+  });
 });
 
 // enter controller mode
@@ -72,7 +72,7 @@ control.onclick = () => {
 light.onclick = () => {
   // safari requires playing on input before allowing audio
   audio.muted = true;
-  audio.play().then(audio.muted=false)
+  audio.play().then(audio.muted = false)
 
   // in light mode make it full screen and fade buttons
   document.documentElement.requestFullscreen();
@@ -99,7 +99,7 @@ const getSound = (query, loop = false, random = false) => {
       audio.src = src;
       audio.play();
       console.log(src);
-		  })
+    })
     .catch((error) => console.log(error));
 };
 
