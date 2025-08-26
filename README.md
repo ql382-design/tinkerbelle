@@ -11,6 +11,8 @@ You can control the smart light (your phone) via the web interface or using any 
 This project uses a python web-server called Flask. 
 You should have [Python3 installed](https://realpython.com/installing-python/).
 
+**Python Version Compatibility**: This project works with Python 3.7 and newer. If you encounter installation issues with specific package versions, try using a more recent version of Python (3.9+ recommended).
+
 <!--To install flask in a virtual environment:
 ```
 $ sudo pip3 install virtualenv
@@ -22,6 +24,8 @@ $ source bin/activate
 Now clone this repo to download the python code that serves up the Flask page by typing the following commands in your laptop/computer terminal.
 (You can check out more details [here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github/cloning-a-repository) for how to clone github repository to a local machine.)
 
+`It is advisable to install the dependencies into a `[virtualenvironment](https://realpython.com/python-virtual-environments-a-primer/). 
+
 ```
 $ cd (set the directory you want to clone the repo to)
 $ git clone https://github.com/FAR-Lab/tinkerbelle.git
@@ -29,13 +33,19 @@ $ cd tinkerbelle
 $ pip3 install -r requirements.txt
 ```
 
+### Troubleshooting Installation
+If you encounter issues installing the requirements:
+1. **For older Python versions (3.7-3.8)**: Some packages may need specific versions. Try: `pip3 install Flask==2.2.2 Flask-SocketIO==5.3.0`
+2. **For newer Python versions (3.11+)**: The flexible requirements should work. If not, try installing packages individually: `pip3 install Flask Flask-SocketIO`
+3. **General issues**: Consider using a virtual environment or updating pip: `pip3 install --upgrade pip`
+
 ## Getting started
 Run the tinker.py code, which serves up a webpage
 
 ```
 $ python3 tinker.py
  * Restarting with stat
-access at http://localhost:5000
+access at http://localhost:5001
  * Debugger is active!
  * Debugger PIN: ***-***-***
 ```
@@ -44,7 +54,9 @@ If your get the following error message: `ModuleNotFoundError: No module named '
 
 
 ### On a mobile device - acting as the web-controlled smart light
-Make sure you are connected to the **same WiFi network** as the computer you are running the web-server. In your phone settings, turn your brightness and volume to full and set the screen to never shut off or lock. On the phone browser, navigate to the [WiFi IPv4 address](https://smallbusiness.chron.com/ip-address-wifi-52888.html) of your laptop/computer you are using to run the web-server with port=5000. In this case, that would be `http://[yourWiFiIPv4address]:5000`.
+Make sure you are connected to the **same WiFi network** as the computer you are running the web-server. In your phone settings, turn your brightness and volume to full and set the screen to never shut off or lock. On the phone browser, navigate to the [WiFi IPv4 address](https://smallbusiness.chron.com/ip-address-wifi-52888.html) of your laptop/computer you are using to run the web-server with port=5001. In this case, that would be `http://[yourWiFiIPv4address]:5001`.
+
+
 
 There should be two buttons. Selecting Tinkerbelle should full-screen the webpage and fade out the buttons. (Note: Unfortunately, the full-screen function does not work on iPhones in case you are using one.)
 
