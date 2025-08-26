@@ -6,6 +6,25 @@ You can control the smart light (your phone) via the web interface or using any 
 
 <img src="/imgs/Snapshot.PNG" alt="system diagram" width="300"/>
 
+## 🚀 Enhanced Version Available!
+
+Looking for more features? Check out the **`newnewUI` branch** which includes:
+
+<img src="/imgs/KeyboardControl.png" alt="Enhanced Keyboard Control Version" width="300"/>
+
+- 🎹 **Keyboard Shortcuts**: Control colors and effects directly from your keyboard  
+- 🎵 **Advanced Sound Options**: Define and trigger custom sounds
+- 🎨 **Enhanced Color Controls**: More color options and customization
+- ✨ **Smooth Transitions**: Easing animations between color changes
+- 🖥️ **Dual Server Options**: Python Flask OR Node.js implementations
+
+**To try the enhanced version:**
+```bash
+git checkout newnewUI
+```
+
+---
+
 ## Installation
 
 This project uses a python web-server called Flask. 
