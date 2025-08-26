@@ -11,6 +11,8 @@ You can control the smart light (your phone) via the web interface or using any 
 This project uses a python web-server called Flask. 
 You should have [Python3 installed](https://realpython.com/installing-python/).
 
+**Python Version Compatibility**: This project works with Python 3.7 and newer. If you encounter installation issues with specific package versions, try using a more recent version of Python (3.9+ recommended).
+
 <!--To install flask in a virtual environment:
 ```
 $ sudo pip3 install virtualenv
@@ -30,6 +32,12 @@ $ git clone https://github.com/FAR-Lab/tinkerbelle.git
 $ cd tinkerbelle
 $ pip3 install -r requirements.txt
 ```
+
+### Troubleshooting Installation
+If you encounter issues installing the requirements:
+1. **For older Python versions (3.7-3.8)**: Some packages may need specific versions. Try: `pip3 install Flask==2.2.2 Flask-SocketIO==5.3.0`
+2. **For newer Python versions (3.11+)**: The flexible requirements should work. If not, try installing packages individually: `pip3 install Flask Flask-SocketIO`
+3. **General issues**: Consider using a virtual environment or updating pip: `pip3 install --upgrade pip`
 
 ## Getting started
 Run the tinker.py code, which serves up a webpage
