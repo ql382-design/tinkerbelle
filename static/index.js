@@ -8,7 +8,7 @@ socket.on('connect', () => {
   // Change background color when receiving "hex" from server
   socket.on('hex', (val) => { 
     document.body.style.backgroundColor = val;
-    triggerShake(); // Trigger shake effect on color change
+    triggerBrightnessAndShake(); // Brightness + shake sequence
   });
 
   socket.onAny((event, ...args) => {
@@ -60,7 +60,7 @@ control.onclick = () => {
       const hexCode = e.toHEXA().toString();
       document.body.style.backgroundColor = hexCode;
       socket.emit('hex', hexCode);
-      triggerShake(); // Shake effect on local color change
+      triggerBrightnessAndShake(); // Brightness + shake sequence on local change
     });
   }
 };
@@ -79,10 +79,27 @@ light.onclick = () => {
   document.getElementById('controlPanel').style.opacity = 0;
 };
 
+// Function to handle brightness transition + shake
+function triggerBrightnessAndShake() {
+  // Step 1: darken the screen
+  document.body.style.transition = "filter 2s ease";
+  document.body.style.filter = "brightness(30%)";
+
+  // Step 2: brighten the screen gradually
+  setTimeout(() => {
+    document.body.style.filter = "brightness(100%)";
+
+    // Step 3: after delay, trigger shake
+    setTimeout(() => {
+      triggerShake();
+    }, 2000); // wait 2s after brightening
+  }, 100); // small delay before brightening
+}
+
 // Function to trigger screen shake effect
 function triggerShake() {
   document.body.classList.add('shake');
-  setTimeout(() => document.body.classList.remove('shake'), 300);
+  setTimeout(() => document.body.classList.remove('shake'), 600);
 }
 
 // Add CSS animation for shake effect
@@ -96,7 +113,7 @@ style.innerHTML = `
   100% { transform: translate(0, 0); }
 }
 .shake {
-  animation: shake 0.3s linear;
+  animation: shake 0.6s linear;
 }
 `;
 document.head.appendChild(style);
