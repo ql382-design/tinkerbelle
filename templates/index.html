@@ -6,9 +6,9 @@
   <title>Shake Control</title>
 
   <!-- =========================
-       CSS
+       CSS with cache-busting
        ========================= -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ time.time() }}">
 
   <!-- =========================
        Pickr Color Picker
@@ -48,8 +48,8 @@
   </div>
 
   <!-- =========================
-       JS Script
+       JS Script with cache-busting
        ========================= -->
-  <script src="{{ url_for('static', filename='index.js') }}"></script>
+  <script src="{{ url_for('static', filename='index.js') }}?v={{ time.time() }}"></script>
 </body>
 </html>
