@@ -1,36 +1,37 @@
 const control = document.getElementById('control');
 const light = document.getElementById('light');
-const play = document.getElementById('play');
-const pause = document.getElementById('pause');
-const audioIn = document.getElementById('audioIn');
-const audio = new Audio();
 let pickr;
 
 const socket = io();
 
 socket.on('connect', () => {
-  socket.on('hex', (val) => { document.body.style.backgroundColor = val })
-  socket.on('audio', (val) => { getSound(encodeURI(val)); })
-  socket.on('pauseAudio', (val) => { audio.pause(); })
+  // Change background color when receiving "hex" from server
+  socket.on('hex', (val) => { 
+    document.body.style.backgroundColor = val;
+    triggerShake(); // Trigger shake effect on color change
+  });
+
   socket.onAny((event, ...args) => {
     console.log(event, args);
   });
 });
 
-// enter controller mode
+// Enter controller mode
 control.onclick = () => {
-  console.log('control')
-  // make sure you're not in fullscreen
+  console.log('control');
+  // Exit fullscreen if active
   if (document.fullscreenElement) {
     document.exitFullscreen()
       .then(() => console.log('exited full screen mode'))
       .catch((err) => console.error(err));
   }
-  // make buttons and controls visible
+
+  // Show controls
   document.getElementById('user').classList.remove('fadeOut');
   document.getElementById('controlPanel').style.opacity = 0.6;
+
+  // Initialize color picker if not already created
   if (!pickr) {
-    // create our color picker. You can change the swatches that appear at the bottom
     pickr = Pickr.create({
       el: '.pickr',
       theme: 'classic',
@@ -38,13 +39,13 @@ control.onclick = () => {
       swatches: [
         'rgba(76, 175, 80, 1)',
         'rgba(0, 0, 0, 1)',
-        'rgba(244, 67, 54, 1)',   // Red light (fruit bowl / goblet)
-        'rgba(0, 0, 0, 1)',       // Black screen (light off)
-        'rgba(156, 39, 176, 1)',  // Queen's goblet purple light
-        'rgba(244, 67, 54, 1)',   // Red light (King's hand)
-        'rgba(0, 0, 0, 1)',       // Black screen (light off)
-        'rgba(255, 255, 255, 1)', // Final scene white light
-        'rgba(244, 67, 54, 1)',   // Final scene red light
+        'rgba(244, 67, 54, 1)',
+        'rgba(0, 0, 0, 1)',
+        'rgba(156, 39, 176, 1)',
+        'rgba(244, 67, 54, 1)',
+        'rgba(0, 0, 0, 1)',
+        'rgba(255, 255, 255, 1)',
+        'rgba(244, 67, 54, 1)',
         'rgba(0, 0, 0, 1)',  
       ],
       components: {
@@ -54,95 +55,37 @@ control.onclick = () => {
       },
     });
 
+    // When color changes, update background and notify server
     pickr.on('change', (e) => {
-      // when pickr color value is changed change background and send message on ws to change background
       const hexCode = e.toHEXA().toString();
       document.body.style.backgroundColor = hexCode;
-      socket.emit('hex', hexCode)
+      socket.emit('hex', hexCode);
+      triggerShake(); // Shake effect on local color change
     });
   }
 };
 
+// Enter light mode (fullscreen and hide controls)
 light.onclick = () => {
-  // safari requires playing on input before allowing audio
-  audio.muted = true;
-  audio.play().then(audio.muted = false)
-
-  // in light mode make it full screen and fade buttons
   document.documentElement.requestFullscreen();
   document.getElementById('user').classList.add('fadeOut');
-  // if you were previously in control mode remove color picker and hide controls
   if (pickr) {
-    // this is annoying because of the pickr package
     pickr.destroyAndRemove();
-    document.getElementById('controlPanel').append(Object.assign(document.createElement('div'), { className: 'pickr' }));
+    document.getElementById('controlPanel').append(
+      Object.assign(document.createElement('div'), { className: 'pickr' })
+    );
     pickr = undefined;
   }
   document.getElementById('controlPanel').style.opacity = 0;
 };
 
-
-const FREESOUND_TOKEN = process.env.FREESOUND_TOKEN;
-
-
-const getSound = (query, loop = false, random = false) => {
-  const url = `https://freesound.org/apiv2/search/text/?query=${query}&fields=name,previews&token=${FREESOUND_TOKEN}&format=json`;
-  fetch(url)
-    .then((response) => response.clone().text())
-    .then((data) => {
-      data = JSON.parse(data);
-      if (data.results.length >= 1) {
-        var src = random ? choice(data.results).previews['preview-hq-mp3'] : data.results[0].previews['preview-hq-mp3'];
-        audio.src = src;
-        audio.play();
-      }
-    })
-    .catch((error) => console.log(error));
-};
-
-play.onclick = () => {
-  socket.emit('audio', audioIn.value)
-  getSound(encodeURI(audioIn.value));
-};
-pause.onclick = () => {
-  socket.emit('pauseAudio', audioIn.value)
-  audio.pause();
-};
-audioIn.onkeyup = (e) => { if (e.keyCode === 13) { play.click(); } };
-
-document.body.classList.add('shake');
-  setTimeout(() => document.body.classList.remove('shake'), 500);
-};
-
-const getSound = (query, loop = false, random = false) => {
-  const url = `https://freesound.org/apiv2/search/text/?query=${query}+"&fields=name,previews&token=U5slaNIqr6ofmMMG2rbwJ19mInmhvCJIryn2JX89&format=json`;
-  fetch(url)
-    .then((response) => response.clone().text())
-    .then((data) => {
-      console.log(data);
-      data = JSON.parse(data);
-      if (data.results.length >= 1) var src = random ? choice(data.results).previews['preview-hq-mp3'] : data.results[0].previews['preview-hq-mp3'];
-      audio.src = src;
-      audio.play();
-      console.log(src);
-    })
-    .catch((error) => console.log(error));
-};
-
-play.onclick = () => {
-  socket.emit('audio', audioIn.value)
-  getSound(encodeURI(audioIn.value));
-
-
+// Function to trigger screen shake effect
+function triggerShake() {
   document.body.classList.add('shake');
   setTimeout(() => document.body.classList.remove('shake'), 300);
-};
-pause.onclick = () => {
-  socket.emit('pauseAudio', audioIn.value)
-  audio.pause();
-};
-audioIn.onkeyup = (e) => { if (e.keyCode === 13) { play.click(); } };
+}
 
+// Add CSS animation for shake effect
 const style = document.createElement('style');
 style.innerHTML = `
 @keyframes shake {
@@ -157,13 +100,3 @@ style.innerHTML = `
 }
 `;
 document.head.appendChild(style);
-
-
-if (window.DeviceOrientationEvent) {
-  window.addEventListener('deviceorientation', (event) => {
-    const tilt = Math.abs(event.gamma || 0); // 左右倾斜
-    const brightness = Math.min(100, 50 + tilt); 
-    document.body.style.filter = `brightness(${brightness}%)`;
-  });
-}
-
