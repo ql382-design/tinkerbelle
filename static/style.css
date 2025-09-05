@@ -1,26 +1,36 @@
+/* =========================
+   Global Body Styles
+   ========================= */
 body {
   margin: 0;
   height: 100vh;
-  transition: filter 2s ease;
+  transition: filter 2s ease; /* Smooth brightness transition */
   font-family: sans-serif;
   background: #222; /* Default dark background */
+  overflow: hidden; /* Prevent scroll during shake */
 }
 
+/* =========================
+   Control Panel Styles
+   ========================= */
 #controlPanel {
   position: fixed;
   top: 10px;
   left: 10px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95); /* Slightly transparent */
   padding: 15px;
   border-radius: 8px;
   z-index: 1000;
   width: 220px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 #controlPanel label {
   display: block;
   margin: 10px 0 5px;
   font-size: 14px;
+  font-weight: bold;
+  color: #333;
 }
 
 #controlPanel input[type=range] {
@@ -30,9 +40,23 @@ body {
 #controlPanel button {
   margin: 5px 2px;
   padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  background: #444;
+  color: #fff;
+  transition: background 0.2s ease;
 }
 
-/* Shake Animation */
+#controlPanel button:hover {
+  background: #666;
+}
+
+/* =========================
+   Shake Animation (default)
+   ========================= */
+/* Dynamically overridden in JS based on SHAKE_STRENGTH */
 @keyframes shake {
   0% { transform: translate(2px, 2px) rotate(0.5deg); }
   20% { transform: translate(-2px, 2px) rotate(-0.5deg); }
@@ -44,4 +68,25 @@ body {
 
 .shake {
   animation: shake 0.2s linear infinite;
+}
+
+/* =========================
+   Pickr Color Picker Styles
+   ========================= */
+.pickr {
+  margin-top: 10px;
+}
+
+/* =========================
+   Additional UI Tweaks
+   ========================= */
+input[type=range]::-webkit-slider-thumb {
+  background: #444;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type=range]:focus {
+  outline: none;
 }
