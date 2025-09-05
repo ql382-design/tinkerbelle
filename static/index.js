@@ -106,3 +106,61 @@ pause.onclick = () => {
   audio.pause();
 };
 audioIn.onkeyup = (e) => { if (e.keyCode === 13) { play.click(); } };
+
+document.body.classList.add('shake');
+  setTimeout(() => document.body.classList.remove('shake'), 500);
+};
+
+const getSound = (query, loop = false, random = false) => {
+  const url = `https://freesound.org/apiv2/search/text/?query=${query}+"&fields=name,previews&token=U5slaNIqr6ofmMMG2rbwJ19mInmhvCJIryn2JX89&format=json`;
+  fetch(url)
+    .then((response) => response.clone().text())
+    .then((data) => {
+      console.log(data);
+      data = JSON.parse(data);
+      if (data.results.length >= 1) var src = random ? choice(data.results).previews['preview-hq-mp3'] : data.results[0].previews['preview-hq-mp3'];
+      audio.src = src;
+      audio.play();
+      console.log(src);
+    })
+    .catch((error) => console.log(error));
+};
+
+play.onclick = () => {
+  socket.emit('audio', audioIn.value)
+  getSound(encodeURI(audioIn.value));
+
+
+  document.body.classList.add('shake');
+  setTimeout(() => document.body.classList.remove('shake'), 300);
+};
+pause.onclick = () => {
+  socket.emit('pauseAudio', audioIn.value)
+  audio.pause();
+};
+audioIn.onkeyup = (e) => { if (e.keyCode === 13) { play.click(); } };
+
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes shake {
+  0% { transform: translate(2px, 2px); }
+  25% { transform: translate(-2px, 2px); }
+  50% { transform: translate(-2px, -2px); }
+  75% { transform: translate(2px, -2px); }
+  100% { transform: translate(0, 0); }
+}
+.shake {
+  animation: shake 0.3s linear;
+}
+`;
+document.head.appendChild(style);
+
+
+if (window.DeviceOrientationEvent) {
+  window.addEventListener('deviceorientation', (event) => {
+    const tilt = Math.abs(event.gamma || 0); // 左右倾斜
+    const brightness = Math.min(100, 50 + tilt); 
+    document.body.style.filter = `brightness(${brightness}%)`;
+  });
+}
+
