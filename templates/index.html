@@ -13,9 +13,10 @@
   <!-- Button to trigger shake + sound -->
   <button id="startShake">Start Shake</button>
 
-  <!-- Audio element作为备份 -->
-  <audio id="sound" 
-    src="https://raw.githubusercontent.com/ql382-design/tinkerbelle/main/static/wine-glass-clink-36036.mp3">
+  <!-- 调试用播放器（先测试音频能放出来，再隐藏也行） -->
+  <audio id="sound" controls>
+    <source src="https://raw.githubusercontent.com/ql382-design/tinkerbelle/main/static/wine-glass-clink-36036.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
   </audio>
 
   <!-- Link to main JS -->
@@ -23,3 +24,4 @@
 </body>
 
 </html>
+
