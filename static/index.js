@@ -83,7 +83,7 @@ light.onclick = () => {
 function triggerBrightnessAndShake() {
   // Step 1: darken the screen
   document.body.style.transition = "filter 2s ease";
-  document.body.style.filter = "brightness(30%)";
+  document.body.style.filter = "brightness(5%)";
 
   // Step 2: brighten the screen gradually
   setTimeout(() => {
