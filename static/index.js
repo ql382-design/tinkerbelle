@@ -1,6 +1,7 @@
 // Get the button element and create audio object
 const startBtn = document.getElementById('startShake');
-const sound = new Audio('../static/wine-glass-clink-36036.mp3');
+const sound = new Audio('https://raw.githubusercontent.com/ql382-design/tinkerbelle/main/static/wine-glass-clink-36036.mp3');
+
 sound.volume = 1.0;
 
 // Add shake animation CSS to the document
