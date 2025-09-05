@@ -3,41 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Color Control with Shake Effect</title>
+  <title>Shake Control</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
   <!-- Pickr Color Picker -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
   <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
-
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+  <!-- Control Panel -->
+  <div id="controlPanel">
+    <p><b>Control Panel</b></p>
 
-<!-- Control Panel -->
-<div id="controlPanel">
-  <p><b>Control Panel</b></p>
-  
-  <!-- Color Picker -->
-  <div class="pickr"></div>
+    <!-- Color Picker -->
+    <div class="pickr"></div>
 
-  <!-- Sliders -->
-  <label>Shake Strength</label>
-  <input type="range" id="shakeStrength" min="1" max="10" value="4">
+    <!-- Sliders -->
+    <label>Shake Strength</label>
+    <input type="range" id="shakeStrength" min="1" max="10" value="4">
 
-  <label>Brightness (%)</label>
-  <input type="range" id="brightness" min="50" max="150" value="130">
+    <label>Brightness (%)</label>
+    <input type="range" id="brightness" min="50" max="150" value="130">
 
-  <!-- Quick buttons -->
-  <div>
-    <button id="lightMode">Light</button>
-    <button id="mediumMode">Medium</button>
-    <button id="strongMode">Strong</button>
+    <!-- Quick buttons -->
+    <div>
+      <button id="lightMode">Light</button>
+      <button id="mediumMode">Medium</button>
+      <button id="strongMode">Strong</button>
+    </div>
+
+    <!-- Shake toggle -->
+    <div>
+      <button onclick="startShaking()">Start Shake</button>
+      <button onclick="stopShaking()">Stop Shake</button>
+    </div>
   </div>
-</div>
 
-<!-- Custom JS -->
-<script src="{{ url_for('static', filename='index.js') }}"></script>
-
+  <!-- Script -->
+  <script src="{{ url_for('static', filename='index.js') }}"></script>
 </body>
 </html>
