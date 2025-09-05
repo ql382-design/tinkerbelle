@@ -2,7 +2,7 @@
 // Default values
 // =========================
 let SHAKE_STRENGTH = 4;
-let SHAKE_DURATION = 10000;  // Fixed 10 seconds
+let SHAKE_DURATION = 10000;  // default shake effect duration
 let MAX_BRIGHTNESS = 130;
 
 // =========================
@@ -19,7 +19,7 @@ const pickr = Pickr.create({
     'rgba(156, 39, 176, 1)',  // Purple
     'rgba(255, 255, 255, 1)'  // White
   ],
-  components: { preview:false, opacity:false, hue:true }
+  components: { preview: false, opacity: false, hue: true }
 });
 
 // When color is changed → update background + trigger effect
@@ -53,7 +53,7 @@ function updateShakeCSS() {
 }
 
 // =========================
-// Trigger brightness flash + shake
+// Trigger brightness flash + shake (temporary)
 // =========================
 function triggerBrightnessAndShake() {
   // Darken first
@@ -76,6 +76,16 @@ function triggerBrightnessAndShake() {
 }
 
 // =========================
+// Infinite shake control
+// =========================
+function startShaking() {
+  document.body.classList.add("shake");
+}
+function stopShaking() {
+  document.body.classList.remove("shake");
+}
+
+// =========================
 // Slider event listeners
 // =========================
 document.getElementById('shakeStrength').addEventListener('input', e => {
@@ -90,15 +100,15 @@ document.getElementById('brightness').addEventListener('input', e => {
 // Quick mode buttons
 // =========================
 document.getElementById('lightMode').onclick = () => {
-  SHAKE_STRENGTH=2; MAX_BRIGHTNESS=110;
+  SHAKE_STRENGTH = 2; MAX_BRIGHTNESS = 110;
   updateShakeCSS(); triggerBrightnessAndShake();
 };
 document.getElementById('mediumMode').onclick = () => {
-  SHAKE_STRENGTH=4; MAX_BRIGHTNESS=130;
+  SHAKE_STRENGTH = 4; MAX_BRIGHTNESS = 130;
   updateShakeCSS(); triggerBrightnessAndShake();
 };
 document.getElementById('strongMode').onclick = () => {
-  SHAKE_STRENGTH=6; MAX_BRIGHTNESS=150;
+  SHAKE_STRENGTH = 6; MAX_BRIGHTNESS = 150;
   updateShakeCSS(); triggerBrightnessAndShake();
 };
 
