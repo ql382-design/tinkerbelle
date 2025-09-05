@@ -1,27 +1,32 @@
-body{
-	/*background-color: white;*/
+body { 
+  margin:0; height:100vh; 
+  transition: filter 2s ease; 
+  font-family:sans-serif; 
+  background:#222; /* Default dark background */
+}
+.shake { animation: shake 0.2s linear infinite; }
+
+/* Default shake keyframes */
+@keyframes shake {
+  0% { transform: translate(2px,2px) rotate(0.5deg); }
+  20% { transform: translate(-2px,2px) rotate(-0.5deg); }
+  40% { transform: translate(-2px,-2px) rotate(0.8deg); }
+  60% { transform: translate(2px,-2px) rotate(-0.8deg); }
+  80% { transform: translate(2px,2px) rotate(0.5deg); }
+  100% { transform: translate(0,0) rotate(0deg); }
 }
 
-#user {
-	opacity: 0.6;
-	transition: opacity 1s;
-}
-
-#user.fadeOut{
-	opacity:0.1;
-}
-#user.fadeIn{
-	opacity: 0.6;
-}
-button.pcr-button {
-	display: none;
-}
-
+/* Control Panel */
 #controlPanel {
-	opacity: 0.0;
-	transition: opacity 1s;
+  position: fixed; 
+  top: 10px; 
+  left: 10px;
+  background: rgba(255,255,255,0.9); 
+  padding:15px; 
+  border-radius:8px;
+  z-index:1000;
+  width: 220px;
 }
-
-#controlPanel.fadeIn{
-	opacity: 0.6;
-}
+#controlPanel label { display:block; margin:10px 0 5px; font-size:14px; }
+#controlPanel input[type=range] { width: 100%; }
+#controlPanel button { margin:5px 2px; padding:5px 10px; }
