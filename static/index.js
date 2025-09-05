@@ -1,129 +1,27 @@
-// =========================
-// Default values
-// =========================
-let SHAKE_STRENGTH = 4;
-let SHAKE_DURATION = 10000;  // default shake effect duration in ms
-let MAX_BRIGHTNESS = 130;
+// Get the button element (if present) and create audio object
+const startBtn = document.getElementById('startShake');
+const sound = new Audio('wine-glass-clink-36036.mp3');
 
-// =========================
-// Initialize Audio
-// =========================
-const shakeAudio = new Audio('wine-glass-clink-36036.mp3');
-
-// =========================
-// Initialize Pickr color picker
-// =========================
-const pickr = Pickr.create({
-  el: '.pickr',
-  theme: 'classic',
-  showAlways: true,
-  swatches: [
-    'rgba(76, 175, 80, 1)',   // Green
-    'rgba(0, 0, 0, 1)',       // Black
-    'rgba(244, 67, 54, 1)',   // Red
-    'rgba(156, 39, 176, 1)',  // Purple
-    'rgba(255, 255, 255, 1)'  // White
-  ],
-  components: { preview: false, opacity: false, hue: true }
-});
-
-// When color is changed → update background + trigger effect
-pickr.on('change', e => {
-  const hex = e.toHEXA().toString();
-  document.body.style.backgroundColor = hex;
-  triggerBrightnessAndShake();
-});
-
-// =========================
-// Update shake animation CSS dynamically
-// =========================
-function updateShakeCSS() {
-  const oldStyle = document.getElementById('shake-style');
-  if (oldStyle) oldStyle.remove();
-
-  const style = document.createElement('style');
-  style.id = 'shake-style';
-  style.innerHTML = `
-    @keyframes shake {
-      0% { transform: translate(${SHAKE_STRENGTH}px, ${SHAKE_STRENGTH}px) rotate(0.5deg); }
-      20% { transform: translate(-${SHAKE_STRENGTH}px, ${SHAKE_STRENGTH}px) rotate(-0.5deg); }
-      40% { transform: translate(-${SHAKE_STRENGTH}px, -${SHAKE_STRENGTH}px) rotate(0.8deg); }
-      60% { transform: translate(${SHAKE_STRENGTH}px, -${SHAKE_STRENGTH}px) rotate(-0.8deg); }
-      80% { transform: translate(${SHAKE_STRENGTH}px, ${SHAKE_STRENGTH}px) rotate(0.5deg); }
-      100% { transform: translate(0,0) rotate(0deg); }
-    }
-    .shake { animation: shake 0.2s linear infinite; }
-  `;
-  document.head.appendChild(style);
+// Add shake animation CSS to the document
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes shake {
+  0% { transform: translate(2px, 2px); }
+  25% { transform: translate(-2px, 2px); }
+  50% { transform: translate(-2px, -2px); }
+  75% { transform: translate(2px, -2px); }
+  100% { transform: translate(0, 0); }
 }
-
-// =========================
-// Trigger brightness flash + shake + audio
-// =========================
-function triggerBrightnessAndShake() {
-  // Darken first
-  document.body.style.transition = `filter 1s ease`;
-  document.body.style.filter = "brightness(20%)";
-
-  // Brighten again
-  setTimeout(() => {
-    document.body.style.filter = `brightness(${MAX_BRIGHTNESS}%)`;
-
-    // Start shaking
-    setTimeout(() => {
-      document.body.classList.add('shake');
-
-      // Play shake sound
-      shakeAudio.currentTime = 0;
-      shakeAudio.play();
-
-      // Stop shaking after SHAKE_DURATION
-      setTimeout(() => document.body.classList.remove('shake'), SHAKE_DURATION);
-    }, 200);
-
-  }, 100);
+.shake {
+  animation: shake 0.3s linear infinite; /* infinite shake loop */
 }
+`;
+document.head.appendChild(style);
 
-// =========================
-// Infinite shake control
-// =========================
-function startShaking() {
-  document.body.classList.add("shake");
-  shakeAudio.currentTime = 0;
-  shakeAudio.play();
-}
-function stopShaking() {
-  document.body.classList.remove("shake");
-}
+// Function to start screen shake and play sound
+function startShake(duration = 10000) { // duration in milliseconds, default 10s
+  document.body.classList.add('shake'); // add shake animation
+  sound.currentTime = 0; // reset audio to start
+  sound.play(); // play audio
 
-// =========================
-// Slider event listeners
-// =========================
-document.getElementById('shakeStrength').addEventListener('input', e => {
-  SHAKE_STRENGTH = parseInt(e.target.value);
-  updateShakeCSS();
-});
-document.getElementById('brightness').addEventListener('input', e => {
-  MAX_BRIGHTNESS = parseInt(e.target.value);
-});
-
-// =========================
-// Quick mode buttons
-// =========================
-document.getElementById('lightMode').onclick = () => {
-  SHAKE_STRENGTH = 2; MAX_BRIGHTNESS = 110;
-  updateShakeCSS(); triggerBrightnessAndShake();
-};
-document.getElementById('mediumMode').onclick = () => {
-  SHAKE_STRENGTH = 4; MAX_BRIGHTNESS = 130;
-  updateShakeCSS(); triggerBrightnessAndShake();
-};
-document.getElementById('strongMode').onclick = () => {
-  SHAKE_STRENGTH = 6; MAX_BRIGHTNESS = 150;
-  updateShakeCSS(); triggerBrightnessAndShake();
-};
-
-// =========================
-// Initialize with default shake settings
-// =========================
-updateShakeCSS();
+  // Stop shake and audio after duration
