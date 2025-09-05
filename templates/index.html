@@ -6,22 +6,18 @@
   <title>Tinkerbelle Shake</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
-  <link rel="stylesheet" href="../static/style.css">
+  <link rel="stylesheet" href="static/style.css">
 </head>
 
 <body>
   <!-- Button to trigger shake + sound -->
   <button id="startShake">Start Shake</button>
 
-  <!-- 调试用播放器（先测试音频能放出来，再隐藏也行） -->
-  <audio id="sound" controls>
-    <source src="https://raw.githubusercontent.com/ql382-design/tinkerbelle/main/static/wine-glass-clink-36036.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+  <!-- Audio element is optional, JS also creates Audio object -->
+  <!-- <audio id="sound" src="static/wine-glass-clink-36036.mp3"></audio> -->
 
   <!-- Link to main JS -->
-  <script src="../static/index.js"></script>
+  <script src="static/index.js"></script>
 </body>
 
 </html>
-
