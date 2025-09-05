@@ -2,8 +2,13 @@
 // Default values
 // =========================
 let SHAKE_STRENGTH = 4;
-let SHAKE_DURATION = 10000;  // default shake effect duration
+let SHAKE_DURATION = 10000;  // default shake effect duration in ms
 let MAX_BRIGHTNESS = 130;
+
+// =========================
+// Initialize Audio
+// =========================
+const shakeAudio = new Audio('wine-glass-clink-36036.mp3');
 
 // =========================
 // Initialize Pickr color picker
@@ -53,7 +58,7 @@ function updateShakeCSS() {
 }
 
 // =========================
-// Trigger brightness flash + shake (temporary)
+// Trigger brightness flash + shake + audio
 // =========================
 function triggerBrightnessAndShake() {
   // Darken first
@@ -68,6 +73,10 @@ function triggerBrightnessAndShake() {
     setTimeout(() => {
       document.body.classList.add('shake');
 
+      // Play shake sound
+      shakeAudio.currentTime = 0;
+      shakeAudio.play();
+
       // Stop shaking after SHAKE_DURATION
       setTimeout(() => document.body.classList.remove('shake'), SHAKE_DURATION);
     }, 200);
@@ -80,6 +89,8 @@ function triggerBrightnessAndShake() {
 // =========================
 function startShaking() {
   document.body.classList.add("shake");
+  shakeAudio.currentTime = 0;
+  shakeAudio.play();
 }
 function stopShaking() {
   document.body.classList.remove("shake");
