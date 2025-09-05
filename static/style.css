@@ -1,12 +1,38 @@
-body { 
-  margin:0; height:100vh; 
-  transition: filter 2s ease; 
-  font-family:sans-serif; 
-  background:#222; /* Default dark background */
+body {
+  margin: 0;
+  height: 100vh;
+  transition: filter 2s ease;
+  font-family: sans-serif;
+  background: #222; /* Default dark background */
 }
-.shake { animation: shake 0.2s linear infinite; }
 
-/* Default shake keyframes */
+#controlPanel {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  z-index: 1000;
+  width: 220px;
+}
+
+#controlPanel label {
+  display: block;
+  margin: 10px 0 5px;
+  font-size: 14px;
+}
+
+#controlPanel input[type=range] {
+  width: 100%;
+}
+
+#controlPanel button {
+  margin: 5px 2px;
+  padding: 5px 10px;
+}
+
+/* Shake Animation */
 @keyframes shake {
   0% { transform: translate(2px, 2px) rotate(0.5deg); }
   20% { transform: translate(-2px, 2px) rotate(-0.5deg); }
@@ -19,17 +45,3 @@ body {
 .shake {
   animation: shake 0.2s linear infinite;
 }
-/* Control Panel */
-#controlPanel {
-  position: fixed; 
-  top: 10px; 
-  left: 10px;
-  background: rgba(255,255,255,0.9); 
-  padding:15px; 
-  border-radius:8px;
-  z-index:1000;
-  width: 220px;
-}
-#controlPanel label { display:block; margin:10px 0 5px; font-size:14px; }
-#controlPanel input[type=range] { width: 100%; }
-#controlPanel button { margin:5px 2px; padding:5px 10px; }
