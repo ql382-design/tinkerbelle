@@ -82,17 +82,19 @@ light.onclick = () => {
 };
 
 
+const FREESOUND_TOKEN = process.env.FREESOUND_TOKEN;
+
 const getSound = (query, loop = false, random = false) => {
-  const url = `https://freesound.org/apiv2/search/text/?query=${query}+"&fields=name,previews&token=U5slaNIqr6ofmMMG2rbwJ19mInmhvCJIryn2JX89&format=json`;
+  const url = `https://freesound.org/apiv2/search/text/?query=${query}&fields=name,previews&token=${FREESOUND_TOKEN}&format=json`;
   fetch(url)
     .then((response) => response.clone().text())
     .then((data) => {
-      console.log(data);
       data = JSON.parse(data);
-      if (data.results.length >= 1) var src = random ? choice(data.results).previews['preview-hq-mp3'] : data.results[0].previews['preview-hq-mp3'];
-      audio.src = src;
-      audio.play();
-      console.log(src);
+      if (data.results.length >= 1) {
+        var src = random ? choice(data.results).previews['preview-hq-mp3'] : data.results[0].previews['preview-hq-mp3'];
+        audio.src = src;
+        audio.play();
+      }
     })
     .catch((error) => console.log(error));
 };
