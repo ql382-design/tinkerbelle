@@ -1,55 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shake Control</title>
-
-  <!-- =========================
-       CSS with cache-busting
-       ========================= -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ time.time() }}">
-
-  <!-- =========================
-       Pickr Color Picker
-       ========================= -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+  <meta charset="utf-8" />
+  <title>Tinkerbelle Shake</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+  <link rel="stylesheet" href="static/style.css">
 </head>
+
 <body>
-  <!-- =========================
-       Control Panel
-       ========================= -->
-  <div id="controlPanel">
-    <p><b>Control Panel</b></p>
+  <!-- Optional button to manually trigger shake -->
+  <button id="startShake">Start Shake</button>
 
-    <!-- Color Picker -->
-    <div class="pickr"></div>
+  <!-- Audio file for shake effect -->
+  <audio id="sound" src="wine-glass-clink-36036.mp3"></audio>
 
-    <!-- Sliders -->
-    <label for="shakeStrength">Shake Strength</label>
-    <input type="range" id="shakeStrength" min="1" max="10" value="4">
-
-    <label for="brightness">Brightness (%)</label>
-    <input type="range" id="brightness" min="50" max="150" value="130">
-
-    <!-- Quick Mode Buttons -->
-    <div>
-      <button id="lightMode">Light</button>
-      <button id="mediumMode">Medium</button>
-      <button id="strongMode">Strong</button>
-    </div>
-
-    <!-- Shake Toggle Buttons -->
-    <div>
-      <button onclick="startShaking()">Start Shake</button>
-      <button onclick="stopShaking()">Stop Shake</button>
-    </div>
-  </div>
-
-  <!-- =========================
-       JS Script with cache-busting
-       ========================= -->
-  <script src="{{ url_for('static', filename='index.js') }}?v={{ time.time() }}"></script>
+  <!-- Link to main JS -->
+  <script src="static/index.js"></script>
 </body>
+
 </html>
