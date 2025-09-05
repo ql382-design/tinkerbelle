@@ -4,11 +4,17 @@ let pickr;
 
 const socket = io();
 
+// Default effect settings (can be updated by hotkeys)
+let FADE_DURATION = 2000;   // ms
+let SHAKE_DELAY = 1000;     // ms
+let SHAKE_DURATION = 800;   // ms
+let SHAKE_STRENGTH = 3;     // px and degrees
+
 socket.on('connect', () => {
   // Change background color when receiving "hex" from server
   socket.on('hex', (val) => { 
     document.body.style.backgroundColor = val;
-    triggerBrightnessAndShake(); // Brightness + shake sequence
+    triggerBrightnessAndShake(); // Trigger effect on color change
   });
 
   socket.onAny((event, ...args) => {
@@ -60,7 +66,7 @@ control.onclick = () => {
       const hexCode = e.toHEXA().toString();
       document.body.style.backgroundColor = hexCode;
       socket.emit('hex', hexCode);
-      triggerBrightnessAndShake(); // Brightness + shake sequence on local change
+      triggerBrightnessAndShake(); // effect on local change
     });
   }
 };
@@ -79,41 +85,68 @@ light.onclick = () => {
   document.getElementById('controlPanel').style.opacity = 0;
 };
 
-// Function to handle brightness transition + shake
+// Brightness + shake combined effect
 function triggerBrightnessAndShake() {
   // Step 1: darken the screen
-  document.body.style.transition = "filter 2s ease";
-  document.body.style.filter = "brightness(5%)";
+  document.body.style.transition = `filter ${FADE_DURATION}ms ease`;
+  document.body.style.filter = "brightness(20%)";
 
   // Step 2: brighten the screen gradually
   setTimeout(() => {
-    document.body.style.filter = "brightness(100%)";
+    document.body.style.filter = "brightness(130%)"; // stronger brightness
 
     // Step 3: after delay, trigger shake
     setTimeout(() => {
       triggerShake();
-    }, 2000); // wait 2s after brightening
-  }, 100); // small delay before brightening
+    }, SHAKE_DELAY);
+  }, 100);
 }
 
-// Function to trigger screen shake effect
+// Shake effect
 function triggerShake() {
   document.body.classList.add('shake');
-  setTimeout(() => document.body.classList.remove('shake'), 600);
+  setTimeout(() => document.body.classList.remove('shake'), SHAKE_DURATION);
 }
 
-// Add CSS animation for shake effect
+// Add CSS animation for shake effect (strength will be dynamic)
 const style = document.createElement('style');
 style.innerHTML = `
 @keyframes shake {
-  0% { transform: translate(2px, 2px); }
-  25% { transform: translate(-2px, 2px); }
-  50% { transform: translate(-2px, -2px); }
-  75% { transform: translate(2px, -2px); }
-  100% { transform: translate(0, 0); }
+  0% { transform: translate(${SHAKE_STRENGTH}px, ${SHAKE_STRENGTH}px) rotate(0.5deg); }
+  20% { transform: translate(-${SHAKE_STRENGTH}px, ${SHAKE_STRENGTH}px) rotate(-0.5deg); }
+  40% { transform: translate(-${SHAKE_STRENGTH}px, -${SHAKE_STRENGTH}px) rotate(0.8deg); }
+  60% { transform: translate(${SHAKE_STRENGTH}px, -${SHAKE_STRENGTH}px) rotate(-0.8deg); }
+  80% { transform: translate(${SHAKE_STRENGTH}px, ${SHAKE_STRENGTH}px) rotate(0.5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
 }
 .shake {
-  animation: shake 0.6s linear;
+  animation: shake 0.2s linear infinite;
 }
 `;
 document.head.appendChild(style);
+
+// Hotkeys for quick adjustment
+window.addEventListener('keydown', (e) => {
+  if (e.key === '1') {
+    // Light effect
+    FADE_DURATION = 1000;
+    SHAKE_DELAY = 500;
+    SHAKE_DURATION = 600;
+    SHAKE_STRENGTH = 2;
+    console.log("Effect set to LIGHT");
+  } else if (e.key === '2') {
+    // Medium effect
+    FADE_DURATION = 2000;
+    SHAKE_DELAY = 1000;
+    SHAKE_DURATION = 1000;
+    SHAKE_STRENGTH = 4;
+    console.log("Effect set to MEDIUM");
+  } else if (e.key === '3') {
+    // Strong effect
+    FADE_DURATION = 3000;
+    SHAKE_DELAY = 2000;
+    SHAKE_DURATION = 1500;
+    SHAKE_STRENGTH = 6;
+    console.log("Effect set to STRONG");
+  }
+});
