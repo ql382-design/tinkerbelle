@@ -8,10 +8,6 @@ let pickr;
 
 const socket = io();
 
-// --- New: Create wine sound and button reference ---
-const wineAudio = new Audio("/static/wine.mp3"); // load wine.mp3 from static folder
-const wineBtn = document.getElementById("wineBtn"); // button must exist in index.html
-
 socket.on('connect', () => {
   socket.on('hex', (val) => { document.body.style.backgroundColor = val })
   socket.on('audio', (val) => { getSound(encodeURI(val)); })
@@ -21,41 +17,32 @@ socket.on('connect', () => {
   });
 });
 
-// enter controller mode
+// Controller mode
 control.onclick = () => {
   console.log('control')
-  // make sure you're not in fullscreen
   if (document.fullscreenElement) {
     document.exitFullscreen()
       .then(() => console.log('exited full screen mode'))
       .catch((err) => console.error(err));
   }
-  // make buttons and controls visible
   document.getElementById('user').classList.remove('fadeOut');
   document.getElementById('controlPanel').style.opacity = 0.6;
   if (!pickr) {
-    // create color picker
     pickr = Pickr.create({
       el: '.pickr',
       theme: 'classic',
       showAlways: true,
       swatches: [
+        'rgba(76, 175, 80, 1)',
+        'rgba(0, 0, 0, 1)',
+        'rgba(244, 67, 54, 1)',
+        'rgba(0, 0, 0, 1)',
+        'rgba(156, 39, 176, 1)',
+        'rgba(244, 67, 54, 1)',
+        'rgba(0, 0, 0, 1)',
         'rgba(255, 255, 255, 1)',
         'rgba(244, 67, 54, 1)',
-        'rgba(233, 30, 99, 1)',
-        'rgba(156, 39, 176, 1)',
-        'rgba(103, 58, 183, 1)',
-        'rgba(63, 81, 181, 1)',
-        'rgba(33, 150, 243, 1)',
-        'rgba(3, 169, 244, 1)',
-        'rgba(0, 188, 212, 1)',
-        'rgba(0, 150, 136, 1)',
-        'rgba(76, 175, 80, 1)',
-        'rgba(139, 195, 74, 1)',
-        'rgba(205, 220, 57, 1)',
-        'rgba(255, 235, 59, 1)',
-        'rgba(255, 193, 7, 1)',
-        'rgba(0, 0, 0, 1)',
+        'rgba(0, 0, 0, 1)',  
       ],
       components: {
         preview: false,
@@ -65,7 +52,6 @@ control.onclick = () => {
     });
 
     pickr.on('change', (e) => {
-      // when pickr color value is changed change background and send message on ws to change background
       const hexCode = e.toHEXA().toString();
       document.body.style.backgroundColor = hexCode;
       socket.emit('hex', hexCode)
@@ -74,52 +60,27 @@ control.onclick = () => {
 };
 
 light.onclick = () => {
-  // safari requires playing on input before allowing audio
+  // Safari requires a play interaction before allowing audio
   audio.muted = true;
   audio.play().then(audio.muted = false)
 
-  // in light mode make it full screen and fade buttons
+  // Enter fullscreen and fade controls
   document.documentElement.requestFullscreen();
   document.getElementById('user').classList.add('fadeOut');
-  // if you were previously in control mode remove color picker and hide controls
   if (pickr) {
     pickr.destroyAndRemove();
     document.getElementById('controlPanel').append(Object.assign(document.createElement('div'), { className: 'pickr' }));
     pickr = undefined;
   }
   document.getElementById('controlPanel').style.opacity = 0;
+
+  // Manual shake on entering light mode
+  document.body.classList.add('shake');
+  setTimeout(() => document.body.classList.remove('shake'), 500);
+
+  // Enable gyroscope (iOS needs permission)
+  enableGyro();
 };
-
-// --- Function for manual shake animation ---
-function triggerShake(duration = 2000) {
-  const body = document.body;
-  body.classList.add("shake");
-  setTimeout(() => {
-    body.classList.remove("shake");
-  }, duration); // remove after duration
-}
-
-// --- Handle wine button click ---
-wineBtn.onclick = () => {
-  wineAudio.currentTime = 0; // restart sound
-  wineAudio.play();
-  triggerShake(5000); // shake for 5 seconds
-};
-
-// --- iOS / Mobile: Gyroscope controls brightness + shake ---
-if (window.DeviceOrientationEvent) {
-  window.addEventListener('deviceorientation', (event) => {
-    const tilt = Math.abs(event.gamma || 0); // left-right tilt (gamma)
-    const brightness = Math.min(100, 50 + tilt); // map tilt to brightness (50–100%)
-    document.body.style.filter = `brightness(${brightness}%)`;
-
-    // Add shake effect if tilt is strong
-    if (tilt > 20) {
-      document.body.classList.add('shake');
-      setTimeout(() => document.body.classList.remove('shake'), 300);
-    }
-  });
-}
 
 const getSound = (query, loop = false, random = false) => {
   const url = `https://freesound.org/apiv2/search/text/?query=${query}+"&fields=name,previews&token=U5slaNIqr6ofmMMG2rbwJ19mInmhvCJIryn2JX89&format=json`;
@@ -139,9 +100,64 @@ const getSound = (query, loop = false, random = false) => {
 play.onclick = () => {
   socket.emit('audio', audioIn.value)
   getSound(encodeURI(audioIn.value));
+
+  // Shake when playing audio
+  document.body.classList.add('shake');
+  setTimeout(() => document.body.classList.remove('shake'), 300);
 };
 pause.onclick = () => {
   socket.emit('pauseAudio', audioIn.value)
   audio.pause();
 };
 audioIn.onkeyup = (e) => { if (e.keyCode === 13) { play.click(); } };
+
+// ========== Extra Features ==========
+
+// Inject shake CSS animation
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes shake {
+  0% { transform: translate(2px, 2px); }
+  25% { transform: translate(-2px, 2px); }
+  50% { transform: translate(-2px, -2px); }
+  75% { transform: translate(2px, -2px); }
+  100% { transform: translate(0, 0); }
+}
+.shake {
+  animation: shake 0.3s linear;
+}
+`;
+document.head.appendChild(style);
+
+// Enable gyroscope with iOS permission
+function enableGyro() {
+  if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+    // iOS Safari requires user permission
+    DeviceMotionEvent.requestPermission()
+      .then(permissionState => {
+        if (permissionState === 'granted') {
+          window.addEventListener('deviceorientation', handleOrientation);
+          console.log("Gyroscope enabled ✅ (iOS)");
+        } else {
+          alert("Permission denied for gyroscope");
+        }
+      })
+      .catch(console.error);
+  } else {
+    // Non-iOS devices (Android, Desktop Safari/Chrome)
+    window.addEventListener('deviceorientation', handleOrientation);
+    console.log("Gyroscope enabled ✅ (non-iOS)");
+  }
+}
+
+// Handle orientation: brightness + shake
+function handleOrientation(event) {
+  const tilt = Math.abs(event.gamma || 0); // left-right tilt
+  const brightness = Math.min(100, 50 + tilt); 
+  document.body.style.filter = `brightness(${brightness}%)`;
+
+  if (tilt > 20) {
+    document.body.classList.add('shake');
+    setTimeout(() => document.body.classList.remove('shake'), 300);
+  }
+}
