@@ -6,32 +6,36 @@
 	<title>Tinkerbelle</title>
 
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-	<!--     <link rel="stylesheet" type="text/css" href="style.css" media="screen"/> -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
 	<link rel="stylesheet" href="static/style.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js"></script>
-
 </head>
 
 <body>
+	<!-- Main user buttons -->
 	<div id='user'>
 		<button id='control'>Jane Wren</button>
 		<button id='light'>Tinkerbelle</button>
 	</div>
+
+	<!-- Control panel -->
 	<div id='controlPanel'>
 		<div class="pickr"></div>
 		<br>
 		<label> Audio
-			<input type="text" id='audioIn'>
+			<input type="text" id='audioIn' placeholder="Type sound keyword">
 			<button id='play'>▶️</button>
 			<button id='pause'>■</button>
-
 		</label>
+		<br><br>
+		<!-- New Wine Button -->
+		<button id="wineBtn" class="wine-button">🍷 Play Wine Effect</button>
 	</div>
 
+	<!-- Pickr color picker -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
-	<!-- 'monolith' theme -->
 	<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+	<!-- Main script -->
 	<script src="static/index.js"></script>
 </body>
 
