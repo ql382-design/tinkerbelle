@@ -8,6 +8,10 @@ let pickr;
 
 const socket = io();
 
+// --- Wine audio and button ---
+const wineAudio = new Audio("/static/wine.mp3"); // load wine.mp3
+const wineBtn = document.getElementById("wineBtn"); // button in index.html
+
 socket.on('connect', () => {
   socket.on('hex', (val) => { document.body.style.backgroundColor = val })
   socket.on('audio', (val) => { getSound(encodeURI(val)); })
@@ -17,13 +21,16 @@ socket.on('connect', () => {
   });
 });
 
+// ========== Utility: trigger shake ==========
+function triggerShake(duration = 300) {
+  document.body.classList.add('shake');
+  setTimeout(() => document.body.classList.remove('shake'), duration);
+}
+
 // Controller mode
 control.onclick = () => {
-  console.log('control')
   if (document.fullscreenElement) {
-    document.exitFullscreen()
-      .then(() => console.log('exited full screen mode'))
-      .catch((err) => console.error(err));
+    document.exitFullscreen().catch(console.error);
   }
   document.getElementById('user').classList.remove('fadeOut');
   document.getElementById('controlPanel').style.opacity = 0.6;
@@ -44,11 +51,7 @@ control.onclick = () => {
         'rgba(244, 67, 54, 1)',
         'rgba(0, 0, 0, 1)',  
       ],
-      components: {
-        preview: false,
-        opacity: false,
-        hue: true,
-      },
+      components: { preview: false, opacity: false, hue: true },
     });
 
     pickr.on('change', (e) => {
@@ -59,51 +62,51 @@ control.onclick = () => {
   }
 };
 
+// Light mode
 light.onclick = () => {
-  // Safari requires a play interaction before allowing audio
   audio.muted = true;
-  audio.play().then(audio.muted = false)
+  audio.play().then(() => { audio.muted = false });
 
-  // Enter fullscreen and fade controls
   document.documentElement.requestFullscreen();
   document.getElementById('user').classList.add('fadeOut');
   if (pickr) {
     pickr.destroyAndRemove();
-    document.getElementById('controlPanel').append(Object.assign(document.createElement('div'), { className: 'pickr' }));
+    document.getElementById('controlPanel').append(
+      Object.assign(document.createElement('div'), { className: 'pickr' })
+    );
     pickr = undefined;
   }
   document.getElementById('controlPanel').style.opacity = 0;
 
-  // Manual shake on entering light mode
-  document.body.classList.add('shake');
-  setTimeout(() => document.body.classList.remove('shake'), 500);
+  // Always shake on click
+  triggerShake(500);
 
-  // Enable gyroscope (iOS needs permission)
+  // Try to enable gyroscope for iOS
   enableGyro();
 };
 
+// Audio functions
 const getSound = (query, loop = false, random = false) => {
   const url = `https://freesound.org/apiv2/search/text/?query=${query}+"&fields=name,previews&token=U5slaNIqr6ofmMMG2rbwJ19mInmhvCJIryn2JX89&format=json`;
   fetch(url)
     .then((response) => response.clone().text())
     .then((data) => {
-      console.log(data);
       data = JSON.parse(data);
-      if (data.results.length >= 1) var src = random ? choice(data.results).previews['preview-hq-mp3'] : data.results[0].previews['preview-hq-mp3'];
-      audio.src = src;
-      audio.play();
-      console.log(src);
+      if (data.results.length >= 1) {
+        var src = random ? choice(data.results).previews['preview-hq-mp3'] : data.results[0].previews['preview-hq-mp3'];
+        audio.src = src;
+        audio.play();
+      }
     })
-    .catch((error) => console.log(error));
+    .catch(console.log);
 };
 
 play.onclick = () => {
   socket.emit('audio', audioIn.value)
   getSound(encodeURI(audioIn.value));
 
-  // Shake when playing audio
-  document.body.classList.add('shake');
-  setTimeout(() => document.body.classList.remove('shake'), 300);
+  // Shake on play
+  triggerShake(300);
 };
 pause.onclick = () => {
   socket.emit('pauseAudio', audioIn.value)
@@ -111,9 +114,16 @@ pause.onclick = () => {
 };
 audioIn.onkeyup = (e) => { if (e.keyCode === 13) { play.click(); } };
 
+// --- Wine button click ---
+wineBtn.onclick = () => {
+  wineAudio.currentTime = 0;
+  wineAudio.play();
+  triggerShake(5000); // 5 seconds shake
+};
+
 // ========== Extra Features ==========
 
-// Inject shake CSS animation
+// Shake CSS animation
 const style = document.createElement('style');
 style.innerHTML = `
 @keyframes shake {
@@ -123,41 +133,34 @@ style.innerHTML = `
   75% { transform: translate(2px, -2px); }
   100% { transform: translate(0, 0); }
 }
-.shake {
-  animation: shake 0.3s linear;
-}
+.shake { animation: shake 0.3s linear; }
 `;
 document.head.appendChild(style);
 
-// Enable gyroscope with iOS permission
+// Enable gyroscope (iOS permission if needed)
 function enableGyro() {
   if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-    // iOS Safari requires user permission
+    // iOS Safari
     DeviceMotionEvent.requestPermission()
-      .then(permissionState => {
-        if (permissionState === 'granted') {
+      .then(state => {
+        if (state === 'granted') {
           window.addEventListener('deviceorientation', handleOrientation);
-          console.log("Gyroscope enabled ✅ (iOS)");
-        } else {
-          alert("Permission denied for gyroscope");
         }
       })
       .catch(console.error);
   } else {
-    // Non-iOS devices (Android, Desktop Safari/Chrome)
+    // Android / Desktop
     window.addEventListener('deviceorientation', handleOrientation);
-    console.log("Gyroscope enabled ✅ (non-iOS)");
   }
 }
 
-// Handle orientation: brightness + shake
+// Orientation handler: brightness + shake
 function handleOrientation(event) {
-  const tilt = Math.abs(event.gamma || 0); // left-right tilt
-  const brightness = Math.min(100, 50 + tilt); 
+  const tilt = Math.abs(event.gamma || 0);
+  const brightness = Math.min(100, 50 + tilt);
   document.body.style.filter = `brightness(${brightness}%)`;
 
   if (tilt > 20) {
-    document.body.classList.add('shake');
-    setTimeout(() => document.body.classList.remove('shake'), 300);
+    triggerShake(300);
   }
 }
