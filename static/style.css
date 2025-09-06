@@ -1,27 +1,82 @@
-body{
-	/*background-color: white;*/
+body {
+  /* 默认背景白色，可以用颜色选择器修改 */
+  background-color: white;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  text-align: center;
 }
 
 #user {
-	opacity: 0.6;
-	transition: opacity 1s;
+  opacity: 0.6;
+  transition: opacity 1s;
+  padding: 20px;
 }
 
-#user.fadeOut{
-	opacity:0.1;
+#user.fadeOut {
+  opacity: 0.1;
 }
-#user.fadeIn{
-	opacity: 0.6;
+
+#user.fadeIn {
+  opacity: 0.6;
 }
+
+/* 隐藏 Pickr 内置按钮 */
 button.pcr-button {
-	display: none;
+  display: none;
 }
 
 #controlPanel {
-	opacity: 0.0;
-	transition: opacity 1s;
+  opacity: 0.0;
+  transition: opacity 1s;
+  margin-top: 20px;
 }
 
-#controlPanel.fadeIn{
-	opacity: 0.6;
+#controlPanel.fadeIn {
+  opacity: 0.6;
+}
+
+/* 所有按钮的通用样式 */
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Wine 按钮特殊样式 */
+.wine-button {
+  background-color: #b22222; /* 深红色 */
+  color: #fff;
+  font-weight: bold;
+}
+
+.wine-button:hover {
+  background-color: #8b0000; /* 更深的红色 */
+}
+
+/* 抖动动画 */
+@keyframes shake {
+  0% { transform: translate(2px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(0px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(2px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(2px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.shake {
+  animation: shake 0.1s infinite;
 }
