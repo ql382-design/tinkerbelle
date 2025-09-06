@@ -1,24 +1,59 @@
-/* Body style */
-body {
-    /* Optional background color */
-    /* background-color: white; */
-    transition: transform 0.3s; /* smooth transform for shake */
+/* 控制面板样式 */
+#controlPanel {
+  margin-top: 20px;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
-/* Shake animation is added dynamically in index.js, so no need for #user or #controlPanel styles */
-
-/* Style for the start button */
-#startShake {
-    font-size: 1.2rem;
-    padding: 10px 20px;
-    cursor: pointer;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    transition: background-color 0.3s;
+/* Accordion 按钮 */
+.accordion {
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+  padding: 12px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: background-color 0.2s;
+  font-size: 16px;
+  border-radius: 6px;
+  margin-top: 8px;
 }
 
-#startShake:hover {
-    background-color: #45a049;
+.accordion:hover {
+  background-color: #444;
+}
+
+.panel {
+  padding: 10px;
+  display: none;
+  overflow: hidden;
+  background-color: #222;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+/* Quick Sounds 按钮网格 */
+.sound-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.sound-btn {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #222;
+  color: #fff;
+  border: 1px solid #555;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.sound-btn:hover {
+  background: #444;
+  transform: scale(1.05);
 }
