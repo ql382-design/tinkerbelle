@@ -1,23 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!DOCTYPE html> 
+<html>
 <head>
-  <meta charset="utf-8" />
-  <title>Tinkerbelle Shake</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset='utf-8' />
+  <title>Tinkerbelle</title>
+
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
   <link rel="stylesheet" href="static/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js"></script>
 </head>
 
 <body>
-  <!-- Button to trigger shake + sound -->
-  <button id="startShake">Start Shake</button>
+  <div id='user'>
+    <button id='control'>Jane Wren</button>
+    <button id='light'>Tinkerbelle</button>
+  </div>
 
-  <!-- Audio element is optional, JS also creates Audio object -->
-  <!-- <audio id="sound" src="static/wine-glass-clink-36036.mp3"></audio> -->
+  <div id='controlPanel'>
+    <!-- Lighting Control -->
+    <button class="accordion">Lighting Control</button>
+    <div class="panel">
+      <div class="pickr"></div>
+    </div>
 
-  <!-- Link to main JS -->
+    <!-- Audio Input -->
+    <button class="accordion">Audio Input</button>
+    <div class="panel">
+      <label> Audio
+        <input type="text" id='audioIn'>
+        <button id='play'>▶️</button>
+        <button id='pause'>■</button>
+      </label>
+    </div>
+
+    <!-- Quick Sounds -->
+    <button class="accordion">Quick Sounds</button>
+    <div class="panel">
+      <div class="sound-grid">
+        <button class="sound-btn" id="soundThunder">Thunder</button>
+        <button class="sound-btn" id="soundLaugh">Laugh</button>
+        <button class="sound-btn" id="soundEatfull">Eatfull</button>
+        <button class="sound-btn" id="soundDrum">Drum</button>
+        <button class="sound-btn" id="soundExplosion">Explosion</button>
+        <button class="sound-btn" id="soundClap">Clap</button>
+        <button class="sound-btn" id="soundWine">Clap</button>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
   <script src="static/index.js"></script>
 </body>
-
 </html>
