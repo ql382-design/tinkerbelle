@@ -9,7 +9,7 @@ let pickr;
 const socket = io();
 
 // --- New: Create wine sound and button reference ---
-const wineAudio = new Audio("static/wine.mp3"); // load wine.mp3 from static folder
+const wineAudio = new Audio("/static/wine.mp3"); // load wine.mp3 from static folder
 const wineBtn = document.getElementById("wineBtn"); // button must exist in index.html
 
 socket.on('connect', () => {
