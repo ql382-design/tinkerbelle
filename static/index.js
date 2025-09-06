@@ -8,6 +8,10 @@ let pickr;
 
 const socket = io();
 
+// --- New: Create wine sound and button reference ---
+const wineAudio = new Audio("static/wine.mp3"); // load wine.mp3 from static folder
+const wineBtn = document.getElementById("wineBtn"); // button must exist in index.html
+
 socket.on('connect', () => {
   socket.on('hex', (val) => { document.body.style.backgroundColor = val })
   socket.on('audio', (val) => { getSound(encodeURI(val)); })
@@ -79,7 +83,6 @@ light.onclick = () => {
   document.getElementById('user').classList.add('fadeOut');
   // if you were previously in control mode remove color picker and hide controls
   if (pickr) {
-    // this is annoying because of the pickr package
     pickr.destroyAndRemove();
     document.getElementById('controlPanel').append(Object.assign(document.createElement('div'), { className: 'pickr' }));
     pickr = undefined;
@@ -87,6 +90,21 @@ light.onclick = () => {
   document.getElementById('controlPanel').style.opacity = 0;
 };
 
+// --- New: Function for shake animation ---
+function triggerShake(duration = 2000) {
+  const body = document.body;
+  body.classList.add("shake");
+  setTimeout(() => {
+    body.classList.remove("shake");
+  }, duration); // remove after duration
+}
+
+// --- New: Handle wine button click ---
+wineBtn.onclick = () => {
+  wineAudio.currentTime = 0; // restart sound
+  wineAudio.play();
+  triggerShake(5000); // shake for 5 seconds
+};
 
 const getSound = (query, loop = false, random = false) => {
   const url = `https://freesound.org/apiv2/search/text/?query=${query}+"&fields=name,previews&token=U5slaNIqr6ofmMMG2rbwJ19mInmhvCJIryn2JX89&format=json`;
