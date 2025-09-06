@@ -1,5 +1,5 @@
 body {
-  /* 默认背景白色，可以用颜色选择器修改 */
+  /* Default background, can be changed via color picker */
   background-color: white;
   margin: 0;
   font-family: Arial, sans-serif;
@@ -20,7 +20,7 @@ body {
   opacity: 0.6;
 }
 
-/* 隐藏 Pickr 内置按钮 */
+/* Hide Pickr built-in button */
 button.pcr-button {
   display: none;
 }
@@ -35,7 +35,7 @@ button.pcr-button {
   opacity: 0.6;
 }
 
-/* 所有按钮的通用样式 */
+/* General button styles */
 button {
   margin: 5px;
   padding: 10px 20px;
@@ -51,32 +51,37 @@ button:hover {
   background-color: #45a049;
 }
 
-/* Wine 按钮特殊样式 */
+/* Special style for Wine button */
 .wine-button {
-  background-color: #b22222; /* 深红色 */
+  background-color: #b22222; /* dark red */
   color: #fff;
   font-weight: bold;
 }
 
 .wine-button:hover {
-  background-color: #8b0000; /* 更深的红色 */
+  background-color: #8b0000; /* darker red */
 }
 
-/* 抖动动画 */
+/* Shake animation */
 @keyframes shake {
-  0% { transform: translate(2px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(0px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(2px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(2px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
+  0%   { transform: translate(0px, 0px) rotate(0deg); }
+  10%  { transform: translate(-10px, 0px) rotate(-1deg); }
+  20%  { transform: translate(10px, 0px) rotate(1deg); }
+  30%  { transform: translate(-10px, 0px) rotate(0deg); }
+  40%  { transform: translate(10px, 0px) rotate(1deg); }
+  50%  { transform: translate(-10px, 0px) rotate(-1deg); }
+  60%  { transform: translate(10px, 0px) rotate(0deg); }
+  70%  { transform: translate(-10px, 0px) rotate(-1deg); }
+  80%  { transform: translate(10px, 0px) rotate(1deg); }
+  90%  { transform: translate(-10px, 0px) rotate(0deg); }
+  100% { transform: translate(0px, 0px) rotate(-1deg); }
 }
 
 .shake {
-  animation: shake 0.1s infinite;
+  /* Infinite shake effect */
+  animation: shake 0.2s infinite;
+  /* Force GPU acceleration for better mobile performance */
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
