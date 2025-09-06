@@ -34,7 +34,7 @@ control.onclick = () => {
   document.getElementById('user').classList.remove('fadeOut');
   document.getElementById('controlPanel').style.opacity = 0.6;
   if (!pickr) {
-    // create our color picker. You can change the swatches that appear at the bottom
+    // create color picker
     pickr = Pickr.create({
       el: '.pickr',
       theme: 'classic',
@@ -90,7 +90,7 @@ light.onclick = () => {
   document.getElementById('controlPanel').style.opacity = 0;
 };
 
-// --- New: Function for shake animation ---
+// --- Function for manual shake animation ---
 function triggerShake(duration = 2000) {
   const body = document.body;
   body.classList.add("shake");
@@ -99,12 +99,27 @@ function triggerShake(duration = 2000) {
   }, duration); // remove after duration
 }
 
-// --- New: Handle wine button click ---
+// --- Handle wine button click ---
 wineBtn.onclick = () => {
   wineAudio.currentTime = 0; // restart sound
   wineAudio.play();
   triggerShake(5000); // shake for 5 seconds
 };
+
+// --- iOS / Mobile: Gyroscope controls brightness + shake ---
+if (window.DeviceOrientationEvent) {
+  window.addEventListener('deviceorientation', (event) => {
+    const tilt = Math.abs(event.gamma || 0); // left-right tilt (gamma)
+    const brightness = Math.min(100, 50 + tilt); // map tilt to brightness (50–100%)
+    document.body.style.filter = `brightness(${brightness}%)`;
+
+    // Add shake effect if tilt is strong
+    if (tilt > 20) {
+      document.body.classList.add('shake');
+      setTimeout(() => document.body.classList.remove('shake'), 300);
+    }
+  });
+}
 
 const getSound = (query, loop = false, random = false) => {
   const url = `https://freesound.org/apiv2/search/text/?query=${query}+"&fields=name,previews&token=U5slaNIqr6ofmMMG2rbwJ19mInmhvCJIryn2JX89&format=json`;
